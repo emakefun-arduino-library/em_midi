@@ -16,7 +16,7 @@ void Midi::NoteOff(const uint8_t channel, const uint8_t midi_note) {
 }
 
 void Midi::SetChannelTimbre(const uint8_t channel, const uint8_t bank, const uint8_t timbre) {
-  if (bank != EM_MIDI_TIMBRE_BANK_0 && bank != EM_MIDI_TIMBRE_BANK_127_ALTO_SAX) {
+  if (bank != EM_MIDI_TIMBRE_BANK_0 && bank != EM_MIDI_TIMBRE_BANK_127) {
     printf("Error: bank parameter error, can only be EM_MIDI_TIMBRE_BANK_0 or EM_MIDI_TIMBRE_BANK_127.\n");
     return;
   }
@@ -63,9 +63,9 @@ void Midi::SetAllChannelVolume(const uint8_t volume) {
 }
 
 void Midi::SetReverberation(const uint8_t channel,
-                                   const uint8_t reverberation_type,
-                                   const uint8_t reverberation_volume,
-                                   const uint8_t delay_feedback) {
+                            const uint8_t reverberation_type,
+                            const uint8_t reverberation_volume,
+                            const uint8_t delay_feedback) {
   uint8_t command[] = {0xB0 | (channel & 0x0F), 0x50, reverberation_type & 0x07};
   Write(command, sizeof(command) / sizeof(command[0]));
 
@@ -78,10 +78,10 @@ void Midi::SetReverberation(const uint8_t channel,
 }
 
 void Midi::SetChorus(const uint8_t channel,
-                            const uint8_t chorus_effect_type,
-                            const uint8_t chorus_effect_volume,
-                            const uint8_t chorus_effect_feedback,
-                            const uint8_t chorus_delay_time) {
+                     const uint8_t chorus_effect_type,
+                     const uint8_t chorus_effect_volume,
+                     const uint8_t chorus_effect_feedback,
+                     const uint8_t chorus_delay_time) {
   uint8_t command[] = {0xB0 | (channel & 0x0F), 0x51, chorus_effect_type & 0x07};
   Write(command, sizeof(command) / sizeof(command[0]));
 
@@ -221,11 +221,11 @@ void Midi::Write(const uint8_t* buffer, const size_t size) {
 }
 
 void Midi::SendNrpnOrRpnParameter(const uint8_t channel,
-                                         const uint8_t most_significant_byte_controller,
-                                         const uint8_t most_significant_byte,
-                                         const uint8_t least_significant_byte_controller,
-                                         const uint8_t least_significant_byte,
-                                         const uint8_t value) {
+                                  const uint8_t most_significant_byte_controller,
+                                  const uint8_t most_significant_byte,
+                                  const uint8_t least_significant_byte_controller,
+                                  const uint8_t least_significant_byte,
+                                  const uint8_t value) {
   const uint8_t command_most_significant_byte[] = {0xB0 | (channel & 0x0F), most_significant_byte_controller, most_significant_byte};
   Write(command_most_significant_byte, sizeof(command_most_significant_byte) / sizeof(command_most_significant_byte[0]));
 
@@ -236,9 +236,7 @@ void Midi::SendNrpnOrRpnParameter(const uint8_t channel,
   Write(command_set_value, sizeof(command_set_value) / sizeof(command_set_value[0]));
 }
 
-void Midi::NullNrpnOrRpn(const uint8_t channel,
-                                const uint8_t most_significant_byte_controller,
-                                const uint8_t least_significant_byte_controller) {
+void Midi::NullNrpnOrRpn(const uint8_t channel, const uint8_t most_significant_byte_controller, const uint8_t least_significant_byte_controller) {
   const uint8_t command_most_significant_byte[] = {0xB0 | (channel & 0x0F), most_significant_byte_controller, 0x7F};
   Write(command_most_significant_byte, sizeof(command_most_significant_byte) / sizeof(command_most_significant_byte[0]));
 
